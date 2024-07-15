@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use \App\Http\Controllers\DevController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,8 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/dev', function () {
-    return view('dev');
-})->middleware('dev-page-permission');
+Route::middleware('dev-permission')->group(function () {
+    Route::get('/dev',[DevController::class,'index'])->name('dev.index');
+    Route::post('/dev/executeSql',[DevController::class,'executeSql'])->name('dev.executeSql');
+    Route::get('/dev/export', [DevController::class, 'export'])->name('dev.export');
+});
 
 require __DIR__.'/auth.php';
